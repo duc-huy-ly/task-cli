@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"github.com/dly/task-cli/core"
 )
 
 func main() {
@@ -14,7 +15,7 @@ func main() {
 		return
 	}
 	if len(os.Args) < 2 {
-		fmt.Println("Hello world")
+		test()
 		return
 	}
 	command := os.Args[1]
@@ -26,10 +27,15 @@ func main() {
 		}
 	}
 	fmt.Println("command not not exist")
-
 }
 
 func printHelp() {
 	fmt.Println("Help for the cli-app")
 }
 
+func test(){
+	user := &core.User{}
+	user.AddTask("Make cookies")
+	user.AddTask("Bake cookies")
+	user.ListToDo()
+}

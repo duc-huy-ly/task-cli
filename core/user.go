@@ -38,6 +38,10 @@ func (u *User) RemoveTask(taskId int) {
 			index = i
 		}
 	}
+	if index == -1 {
+		// nothing to remove
+		return
+	}
 	u.tasks = append(u.tasks[:index], u.tasks[index+1:]...)
 
 }
@@ -51,32 +55,34 @@ func (u *User) UpdateTaskName(id int, newName string) {
 
 }
 
-func (u *User) ChangeStatus(id int, s TaskStatus){
+func (u *User) ChangeStatus(id int, s TaskStatus) {
 	toUpdate, err := getTaskById(id, u)
-	if err != nil {return}
+	if err != nil {
+		return
+	}
 	toUpdate.SetStatus(s)
 }
 
-func (u *User) ListDone(){
+func (u *User) ListDone() {
 	for _, task := range u.tasks {
 		if task.GetStatus() == Done {
-			fmt.Println(task)
+			fmt.Println(task.ToString())
 		}
 	}
 }
 
-func (u *User) ListToDo(){
+func (u *User) ListToDo() {
 	for _, task := range u.tasks {
 		if task.GetStatus() == Empty {
-			fmt.Println(task)
+			fmt.Println(task.ToString())
 		}
 	}
 }
 
-func (u *User) ListInProgress(){
+func (u *User) ListInProgress() {
 	for _, task := range u.tasks {
 		if task.GetStatus() == InProgress {
-			fmt.Println(task)
+			fmt.Println(task.ToString())
 		}
 	}
 }
