@@ -30,7 +30,7 @@ func TestId(t *testing.T) {
 	}
 }
 
-func TestRemove(t *testing.T){
+func TestRemove(t *testing.T) {
 	u := User{}
 	u.AddTask("first")
 	u.AddTask("Second")
@@ -43,7 +43,19 @@ func TestRemove(t *testing.T){
 	}
 }
 
-func TestChangeNameUser(t *testing.T){
+func TestGetTaskWithInexistentId(t *testing.T) {
+	u := User{}
+	u.AddTask("first")
+	u.AddTask("second")
+
+	// Try to get a task with ID 999 that doesn't exist
+	_, err := getTaskById(999, &u)
+	if err == nil {
+		t.Fatalf("expected error when getting task with inexistent ID, got nil")
+	}
+}
+
+func TestChangeNameUser(t *testing.T) {
 	u := User{}
 	u.AddTask("my name")
 	u.UpdateTaskName(1, "new name")

@@ -2,6 +2,7 @@ package core
 
 import (
 	"errors"
+	"fmt"
 	"time"
 )
 
@@ -48,6 +49,36 @@ func (u *User) UpdateTaskName(id int, newName string) {
 	}
 	toUpdate.SetName(newName)
 
+}
+
+func (u *User) ChangeStatus(id int, s TaskStatus){
+	toUpdate, err := getTaskById(id, u)
+	if err != nil {return}
+	toUpdate.SetStatus(s)
+}
+
+func (u *User) ListDone(){
+	for _, task := range u.tasks {
+		if task.GetStatus() == Done {
+			fmt.Println(task)
+		}
+	}
+}
+
+func (u *User) ListToDo(){
+	for _, task := range u.tasks {
+		if task.GetStatus() == Empty {
+			fmt.Println(task)
+		}
+	}
+}
+
+func (u *User) ListInProgress(){
+	for _, task := range u.tasks {
+		if task.GetStatus() == InProgress {
+			fmt.Println(task)
+		}
+	}
 }
 
 func getTaskById(value int, u *User) (Task, error) {
