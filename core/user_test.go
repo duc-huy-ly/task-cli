@@ -42,3 +42,12 @@ func TestRemove(t *testing.T){
 		t.Fatalf("id must be unchagned. got %v", u.tasks[0].GetId())
 	}
 }
+
+func TestChangeNameUser(t *testing.T){
+	u := User{}
+	u.AddTask("my name")
+	u.UpdateTaskName(1, "new name")
+	if u.tasks[0].GetName() != "new name" {
+		t.Fatalf("expected name to have changed to 'new name'. Got %v", u.tasks[0].GetName())
+	}
+}

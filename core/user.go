@@ -1,6 +1,9 @@
 package core
 
-import "time"
+import (
+	"errors"
+	"time"
+)
 
 type IUser interface {
 	AddTask(name string)
@@ -30,11 +33,28 @@ func (u *User) AddTask(_name string) {
 func (u *User) RemoveTask(taskId int) {
 	var index = -1
 	for i := 0; i < len(u.tasks); i++ {
-		if u.tasks[i].GetId()== taskId {
+		if u.tasks[i].GetId() == taskId {
 			index = i
-		}	
+		}
 	}
 	u.tasks = append(u.tasks[:index], u.tasks[index+1:]...)
-	
 
+}
+
+func (u *User) UpdateTaskName(id int, newName string) {
+	toUpdate, err := getTaskById(id, u)
+	if err != nil {
+		return
+	}
+	toUpdate.SetName(newName)
+
+}
+
+func getTaskById(value int, u *User) (Task, error) {
+	for i := 0; i < len(u.tasks); i++ {
+		if u.tasks[i].GetId() == value {
+			return u.tasks[i], nil
+		}
+	}
+	return nil, errors.New("task not found")
 }

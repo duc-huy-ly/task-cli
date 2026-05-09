@@ -12,7 +12,7 @@ func TestTaskDefaults(t *testing.T) {
 	}
 }
 
-func TestChangeName(t *testing.T) {
+func TestChangeNameTask(t *testing.T) {
 	tk := TaskImpl{name: "Ben"}
 	tk.SetName("Tim")
 	if tk.name != "Tim" {
