@@ -8,6 +8,6 @@ type AddCommand struct {
 	taskName string
 }
 
-func (command AddCommand) execute(){
-
+func (command *AddCommand) execute(){
+	
 }

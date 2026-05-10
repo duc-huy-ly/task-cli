@@ -3,7 +3,6 @@ package core
 import (
 	"errors"
 	"fmt"
-	"time"
 )
 
 type IApp interface {
@@ -21,14 +20,8 @@ type App struct {
 }
 
 func (u *App) AddTask(_name string) {
-	task := &TaskImpl{
-		name:      _name,
-		id:        generateID(),
-		status:    Empty,
-		createdAt: time.Now().Truncate(time.Minute),
-	}
-	u.tasks = append(u.tasks, task)
-
+	task := NewTask(_name)
+	u.tasks = append(u.tasks, &task)
 }
 
 func (u *App) RemoveTask(taskId int) {

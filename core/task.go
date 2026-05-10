@@ -1,6 +1,7 @@
 package core
 
 import (
+	"encoding/json"
 	"fmt"
 	"time"
 )
@@ -33,6 +34,14 @@ type TaskImpl struct {
 	modifiedAt time.Time
 }
 
+func NewTask(_name string) TaskImpl {
+	return TaskImpl {
+		id : generateID(),
+		name : _name,
+		createdAt: time.Now().Truncate(time.Minute),
+	}
+}
+
 func (t *TaskImpl) GetId() int {
 	return t.id
 }
@@ -63,6 +72,22 @@ func (t *TaskImpl) SetStatus(s TaskStatus) {
 
 func (task *TaskImpl) SetModified(t time.Time) {
 	task.modifiedAt = t
+}
+
+func (task TaskImpl) MarshalJSON() ([]byte, error){
+	return json.Marshal(struct {
+		Name string 
+		Id int
+		Status TaskStatus
+		CreatedAt time.Time
+		ModifiedAt time.Time
+	}{
+		Name: task.name,
+		Id : task.id,
+		Status: task.status,
+		CreatedAt: task.createdAt,
+		ModifiedAt: task.modifiedAt,
+	})
 }
 
 func (task *TaskImpl) ToString() string {
