@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-type IUser interface {
+type IApp interface {
 	AddTask(name string)
 	RemoveTask(id int)
 	UpdateTaskName(id int, name string)
@@ -16,11 +16,11 @@ type IUser interface {
 	ListInProgress()
 }
 
-type User struct {
+type App struct {
 	tasks []Task
 }
 
-func (u *User) AddTask(_name string) {
+func (u *App) AddTask(_name string) {
 	task := &TaskImpl{
 		name:      _name,
 		id:        generateID(),
@@ -31,7 +31,7 @@ func (u *User) AddTask(_name string) {
 
 }
 
-func (u *User) RemoveTask(taskId int) {
+func (u *App) RemoveTask(taskId int) {
 	var index = -1
 	for i := 0; i < len(u.tasks); i++ {
 		if u.tasks[i].GetId() == taskId {
@@ -46,7 +46,7 @@ func (u *User) RemoveTask(taskId int) {
 
 }
 
-func (u *User) UpdateTaskName(id int, newName string) {
+func (u *App) UpdateTaskName(id int, newName string) {
 	toUpdate, err := getTaskById(id, u)
 	if err != nil {
 		return
@@ -55,7 +55,7 @@ func (u *User) UpdateTaskName(id int, newName string) {
 
 }
 
-func (u *User) ChangeStatus(id int, s TaskStatus) {
+func (u *App) ChangeStatus(id int, s TaskStatus) {
 	toUpdate, err := getTaskById(id, u)
 	if err != nil {
 		return
@@ -63,7 +63,7 @@ func (u *User) ChangeStatus(id int, s TaskStatus) {
 	toUpdate.SetStatus(s)
 }
 
-func (u *User) ListDone() {
+func (u *App) ListDone() {
 	for _, task := range u.tasks {
 		if task.GetStatus() == Done {
 			fmt.Println(task.ToString())
@@ -71,7 +71,7 @@ func (u *User) ListDone() {
 	}
 }
 
-func (u *User) ListToDo() {
+func (u *App) ListToDo() {
 	for _, task := range u.tasks {
 		if task.GetStatus() == Empty {
 			fmt.Println(task.ToString())
@@ -79,7 +79,7 @@ func (u *User) ListToDo() {
 	}
 }
 
-func (u *User) ListInProgress() {
+func (u *App) ListInProgress() {
 	for _, task := range u.tasks {
 		if task.GetStatus() == InProgress {
 			fmt.Println(task.ToString())
@@ -87,7 +87,7 @@ func (u *User) ListInProgress() {
 	}
 }
 
-func getTaskById(value int, u *User) (Task, error) {
+func getTaskById(value int, u *App) (Task, error) {
 	for i := 0; i < len(u.tasks); i++ {
 		if u.tasks[i].GetId() == value {
 			return u.tasks[i], nil

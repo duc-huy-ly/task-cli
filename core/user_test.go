@@ -3,7 +3,7 @@ package core
 import "testing"
 
 func TestAdd(t *testing.T) {
-	u := User{}
+	u := App{}
 	u.AddTask("go running")
 	if len(u.tasks) != 1 {
 		t.Fatalf("adding task didn't work")
@@ -14,7 +14,7 @@ func TestAdd(t *testing.T) {
 }
 
 func TestId(t *testing.T) {
-	u := User{}
+	u := App{}
 	u.AddTask("first")
 	u.AddTask("Second")
 	u.AddTask("third")
@@ -31,7 +31,7 @@ func TestId(t *testing.T) {
 }
 
 func TestRemove(t *testing.T) {
-	u := User{}
+	u := App{}
 	u.AddTask("first")
 	u.AddTask("Second")
 	u.RemoveTask(1)
@@ -44,7 +44,7 @@ func TestRemove(t *testing.T) {
 }
 
 func TestGetTaskWithInexistentId(t *testing.T) {
-	u := User{}
+	u := App{}
 	u.AddTask("first")
 	u.AddTask("second")
 
@@ -56,7 +56,7 @@ func TestGetTaskWithInexistentId(t *testing.T) {
 }
 
 func TestChangeNameUser(t *testing.T) {
-	u := User{}
+	u := App{}
 	u.AddTask("my name")
 	u.UpdateTaskName(1, "new name")
 	if u.tasks[0].GetName() != "new name" {
