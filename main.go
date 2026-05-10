@@ -1,37 +1,40 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
-	"log"
+	"os"
 
 	"github.com/dly/task-cli/core"
 )
 
-type Hero struct {
-	Id int
-	Name string
-	Beers int
-}
+const dataDirectory = "data/tasks.json"
 
 func main() {
 	fmt.Println("Hello app")
-	t := core.NewTask("first task")
-	println(t.ToString())
-	data, err := json.Marshal(t)
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Println(string(data))
-	himmer := Hero{
-		Id : 1000,
-		Name: "I love frieren",
-		Beers: 677,
-	}
-	himData, _ := json.Marshal(himmer)
-	fmt.Println(string(himData))
-
+	checkFileExistence()
+	data := loadDataFromFile() 
+	user := core.App{}
+	user.LoadData(data)
+	user.AddTask("hello")
+	user.SaveData(dataDirectory)
 }
 
+func checkFileExistence()  error {
+	file, err := os.OpenFile(dataDirectory, os.O_CREATE, 0644)
+	if err != nil {
+		if os.IsExist(err){
+			return nil
+		}
+		return err
+	} 
+	defer file.Close()
+	return nil
+}
 
-
+func loadDataFromFile() []byte{
+	data, err := os.ReadFile(dataDirectory)
+	if err != nil {
+		fmt.Printf("Error reading file : %v\n", err)
+	}
+	return data
+}

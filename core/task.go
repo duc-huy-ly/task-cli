@@ -35,9 +35,9 @@ type TaskImpl struct {
 }
 
 func NewTask(_name string) TaskImpl {
-	return TaskImpl {
-		id : generateID(),
-		name : _name,
+	return TaskImpl{
+		id:        generateID(),
+		name:      _name,
 		createdAt: time.Now().Truncate(time.Minute),
 	}
 }
@@ -74,20 +74,48 @@ func (task *TaskImpl) SetModified(t time.Time) {
 	task.modifiedAt = t
 }
 
-func (task TaskImpl) MarshalJSON() ([]byte, error){
+func (task TaskImpl) MarshalJSON() ([]byte, error) {
 	return json.Marshal(struct {
-		Name string 
-		Id int
-		Status TaskStatus
-		CreatedAt time.Time
+		Name       string
+		Id         int
+		Status     TaskStatus
+		CreatedAt  time.Time
 		ModifiedAt time.Time
 	}{
-		Name: task.name,
-		Id : task.id,
-		Status: task.status,
-		CreatedAt: task.createdAt,
+		Name:       task.name,
+		Id:         task.id,
+		Status:     task.status,
+		CreatedAt:  task.createdAt,
 		ModifiedAt: task.modifiedAt,
 	})
+}
+
+func (task *TaskImpl) UnmarshalJSON(data []byte) error {
+	// 1. Define a temporary "shadow" struct with public fields
+	// that matches the JSON structure
+	type Alias struct {
+		Name       string    `json:"Name"`
+		Id         int       `json:"Id"`
+		Status     TaskStatus `json:"Status"`
+		CreatedAt  time.Time `json:"CreatedAt"`
+		ModifiedAt time.Time `json:"ModifiedAt"`
+	}
+
+	temp := &Alias{}
+
+	// 2. Unmarshal the JSON into the shadow struct
+	if err := json.Unmarshal(data, temp); err != nil {
+		return err
+	}
+
+	// 3. Manually assign the public values to your private fields
+	task.name = temp.Name
+	task.id = temp.Id
+	task.status = temp.Status
+	task.createdAt = temp.CreatedAt
+	task.modifiedAt = temp.ModifiedAt
+
+	return nil
 }
 
 func (task *TaskImpl) ToString() string {
