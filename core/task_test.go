@@ -3,7 +3,7 @@ package core
 import "testing"
 
 func TestTaskDefaults(t *testing.T) {
-	tk := TaskImpl{}
+	tk := Task{}
 	if tk.Name != "" {
 		t.Fatalf("expected empty Dest, got %q", tk.Name)
 	}
@@ -13,7 +13,7 @@ func TestTaskDefaults(t *testing.T) {
 }
 
 func TestChangeNameTask(t *testing.T) {
-	tk := TaskImpl{Name: "Ben"}
+	tk := Task{Name: "Ben"}
 	tk.SetName("Tim")
 	if tk.Name != "Tim" {
 		t.Fatalf("expected name to be changed, got %v", tk.Name)

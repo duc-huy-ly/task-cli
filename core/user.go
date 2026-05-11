@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"time"
 )
 
 type IApp interface {
@@ -18,7 +19,7 @@ type IApp interface {
 }
 
 type App struct {
-	Tasks []TaskImpl
+	Tasks []Task
 }
 
 func (u *App) AddTask(_name string) {
@@ -71,6 +72,7 @@ func (u *App) UpdateTaskName(id int, newName string) {
 		return
 	}
 	toUpdate.SetName(newName)
+	toUpdate.SetModified(time.Now().Truncate(time.Minute))
 
 }
 
@@ -81,11 +83,11 @@ func (u *App) ChangeStatus(id int, s TaskStatus) {
 	}
 	toUpdate.SetStatus(s)
 }
-func displaySimple(task TaskImpl) {
+func displaySimple(task Task) {
 	fmt.Printf("%v : %v\n", task.Id, task.Name)
 }
 
-func displayFull(t TaskImpl){
+func displayFull(t Task){
 	fmt.Printf("Name: %v\nId: %v\n Created: %v\nModified:%v", t.Name, t.Id, t.CreatedAt, t.ModifiedAt)
 }
 func (u *App) ListAll() {
@@ -118,7 +120,7 @@ func (u *App) ListInProgress() {
 	}
 }
 
-func getTaskById(value int, u *App) (*TaskImpl, error) {
+func getTaskById(value int, u *App) (*Task, error) {
 	for i := 0; i < len(u.Tasks); i++ {
 		if u.Tasks[i].GetId() == value {
 			return &u.Tasks[i], nil
