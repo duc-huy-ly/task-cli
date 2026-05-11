@@ -40,7 +40,7 @@ func (u *App) LoadData(data []byte) {
 	for i := range u.Tasks {
 		u.Tasks[i].SetId(i + 1)
 	}
-	setNextID(len(u.Tasks)+1)
+	setNextID(len(u.Tasks) + 1)
 }
 
 func (u *App) SaveData(destination string) {
@@ -81,11 +81,23 @@ func (u *App) ChangeStatus(id int, s TaskStatus) {
 	}
 	toUpdate.SetStatus(s)
 }
+func displaySimple(task TaskImpl) {
+	fmt.Printf("%v : %v\n", task.Id, task.Name)
+}
+
+func displayFull(t TaskImpl){
+	fmt.Printf("Name: %v\nId: %v\n Created: %v\nModified:%v", t.Name, t.Id, t.CreatedAt, t.ModifiedAt)
+}
+func (u *App) ListAll() {
+	for _, task := range u.Tasks {
+		displaySimple(task)
+	}
+}
 
 func (u *App) ListDone() {
 	for _, task := range u.Tasks {
 		if task.GetStatus() == Done {
-			fmt.Println(task.ToString())
+			displaySimple(task)
 		}
 	}
 }
@@ -93,7 +105,7 @@ func (u *App) ListDone() {
 func (u *App) ListToDo() {
 	for _, task := range u.Tasks {
 		if task.GetStatus() == Empty {
-			fmt.Println(task.ToString())
+			displaySimple(task)
 		}
 	}
 }
@@ -101,7 +113,7 @@ func (u *App) ListToDo() {
 func (u *App) ListInProgress() {
 	for _, task := range u.Tasks {
 		if task.GetStatus() == InProgress {
-			fmt.Println(task.ToString())
+			displaySimple(task)
 		}
 	}
 }

@@ -32,6 +32,8 @@ func handleCommandStr(commandStr string, args []string, user *core.App) {
 			return
 		}
 		user.AddTask(strings.Join(args, " "))
+	case "rm":
+		fallthrough
 	case "remove":
 		if len(args) == 0 {
 			fmt.Printf("Give index of task to remove\n")
@@ -43,9 +45,41 @@ func handleCommandStr(commandStr string, args []string, user *core.App) {
 			return
 		}
 		user.RemoveTask(index)
+	case "update":
+		if len(args) < 2 {
+			fmt.Printf("Update must be followed with index + new name of the task")
+			return
+		}
+		index, err := strconv.Atoi(args[0])
+		if err!= nil{
+			fmt.Printf("Str to int conversion err : %v\n", err)
+			return
+		}
+		user.UpdateTaskName(index, strings.Join(args[1:], " "))
+	case "list":
+		if len(args) == 0 {
+			user.ListAll()
+			return
+		}
+		switch args[0] {
+		case "done":
+			user.ListDone()
+		case "todo":
+			user.ListToDo()
+		case "in-progress":
+			user.ListInProgress()
+		default:
+			raiseInvalidArgument()
+			return
+		}
 	default:
-		fmt.Printf("Unknown command\n")
+		raiseInvalidArgument()
+		return
 	}
+}
+
+func raiseInvalidArgument() {
+	fmt.Printf("Unknown command\n")
 }
 
 func checkFileExistence() error {
