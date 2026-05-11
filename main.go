@@ -28,7 +28,10 @@ func handleCommandStr(commandStr string, args []string, user *core.App) {
 	action := strings.ToLower(commandStr)
 	if action == "add" && len(args) != 0{
 		user.AddTask(strings.Join(args, " "))
-	} else {
+	} else if action == "remove" && len(args) != 0{
+		// user.RemoveTask(int)
+		fmt.Printf("delete %v\n", args[0])
+	}else{
 		fmt.Printf("Action not recognized\n")
 	}
 }

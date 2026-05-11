@@ -4,18 +4,18 @@ import "testing"
 
 func TestTaskDefaults(t *testing.T) {
 	tk := TaskImpl{}
-	if tk.name != "" {
-		t.Fatalf("expected empty Dest, got %q", tk.name)
+	if tk.Name != "" {
+		t.Fatalf("expected empty Dest, got %q", tk.Name)
 	}
-	if tk.status != Empty {
-		t.Fatalf("expected status Empty, got %v", tk.status)
+	if tk.Status != Empty {
+		t.Fatalf("expected status Empty, got %v", tk.Status)
 	}
 }
 
 func TestChangeNameTask(t *testing.T) {
-	tk := TaskImpl{name: "Ben"}
+	tk := TaskImpl{Name: "Ben"}
 	tk.SetName("Tim")
-	if tk.name != "Tim" {
-		t.Fatalf("expected name to be changed, got %v", tk.name)
+	if tk.Name != "Tim" {
+		t.Fatalf("expected name to be changed, got %v", tk.Name)
 	}
 }
