@@ -14,3 +14,7 @@ func generateID() int {
 	nextID++
 	return id
 }
+
+func setNextID (value int){
+	nextID = value
+}

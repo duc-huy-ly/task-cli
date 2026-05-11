@@ -16,6 +16,7 @@ const (
 
 type Task interface {
 	GetId() int
+	SetId(value int)
 	GetName() string
 	GetStatus() TaskStatus
 	GetCreationTime() time.Time
@@ -34,6 +35,7 @@ type TaskImpl struct {
 	modifiedAt time.Time
 }
 
+
 func NewTask(_name string) TaskImpl {
 	return TaskImpl{
 		id:        generateID(),
@@ -44,6 +46,10 @@ func NewTask(_name string) TaskImpl {
 
 func (t *TaskImpl) GetId() int {
 	return t.id
+}
+
+func (t*TaskImpl) SetId(value int){
+	t.id = value
 }
 
 func (t *TaskImpl) GetName() string {

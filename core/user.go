@@ -36,6 +36,11 @@ func (u *App) LoadData(data []byte) {
 	if err != nil {
 		fmt.Printf("Unmarshaling not successuful. %v\n", err)
 	}
+	// verify the ids of the Tasks
+	for i := range u.Tasks {
+		u.Tasks[i].SetId(i + 1)
+	}
+	setNextID(len(u.Tasks)+1)
 }
 
 func (u *App) SaveData(destination string) {
