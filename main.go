@@ -56,6 +56,8 @@ func handleCommandStr(commandStr string, args []string, user *core.App) {
 			return
 		}
 		user.UpdateTaskName(index, strings.Join(args[1:], " "))
+	case "l":
+		fallthrough
 	case "list":
 		if len(args) == 0 {
 			user.ListAll()
@@ -72,11 +74,34 @@ func handleCommandStr(commandStr string, args []string, user *core.App) {
 			raiseInvalidArgument()
 			return
 		}
+	case "mark-in-progress":
+		if len(args) == 0 {
+			raiseInvalidArgument()
+			return
+		}
+		index, err := strconv.Atoi(args[0])
+		if err != nil {
+			fmt.Printf("Error converting str to int, %v\n", err)
+			return
+		}
+		user.ChangeStatus(index, core.InProgress)
+	case "mark-done":
+		if len(args) == 0 {
+			raiseInvalidArgument()
+			return
+		}
+		index, err := strconv.Atoi(args[0])
+		if err != nil {
+			fmt.Printf("Error converting str to int, %v\n", err)
+			return
+		}
+		user.ChangeStatus(index, core.Done)
 	default:
 		raiseInvalidArgument()
 		return
 	}
 }
+
 
 func raiseInvalidArgument() {
 	fmt.Printf("Unknown command\n")
