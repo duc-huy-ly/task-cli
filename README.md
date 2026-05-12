@@ -2,6 +2,7 @@
 
 
 A small command-line task manager written in Go. Provides basic task operations (add, remove, update, mark in-progress/done, and list) implemented in the `core` package with a thin `main` CLI.
+https://roadmap.sh/projects/task-tracker
 
 ## Requirements
 
