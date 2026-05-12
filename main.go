@@ -1,26 +1,44 @@
 package main
 
 import (
+	"flag"
 	"fmt"
-	"github.com/dly/task-cli/core"
 	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
+
+	"github.com/dly/task-cli/core"
 )
 
-const dataDirectory = "data/tasks.json"
+var dataDirectory = "data/tasks.json"
 
 func main() {
+	// Define flags
+	helpFlag := flag.Bool("h", false, "Display help message")
+	flag.Parse()
+
+	// Check if help flag was provided
+	if *helpFlag {
+		displayHelp()
+		return
+	}
+
 	checkFileExistence()
 	data := loadDataFromFile()
 	user := core.App{}
 	user.LoadData(data)
-	commandStr, args := parseUserInput(os.Args)
-	if commandStr == "" {
+
+	// Get remaining arguments after flag parsing
+	args := flag.Args()
+	if len(args) == 0 {
 		fmt.Println("Welcome to task-cli. -h for help")
 		return
 	}
-	handleCommandStr(commandStr, args, &user)
+
+	commandStr := args[0]
+	commandArgs := args[1:]
+	handleCommandStr(commandStr, commandArgs, &user)
 	user.SaveData(dataDirectory)
 }
 
@@ -51,7 +69,7 @@ func handleCommandStr(commandStr string, args []string, user *core.App) {
 			return
 		}
 		index, err := strconv.Atoi(args[0])
-		if err!= nil{
+		if err != nil {
 			fmt.Printf("Str to int conversion err : %v\n", err)
 			return
 		}
@@ -102,17 +120,46 @@ func handleCommandStr(commandStr string, args []string, user *core.App) {
 	}
 }
 
-
 func raiseInvalidArgument() {
 	fmt.Printf("Unknown command\n")
 }
 
+func displayHelp() {
+	fmt.Println("Task CLI - A simple task management tool")
+	fmt.Println()
+	fmt.Println("Usage:")
+	fmt.Println("  task-cli <command> [arguments]")
+	fmt.Println()
+	fmt.Println("Commands:")
+	fmt.Println("  add <task>              Add a new task")
+	fmt.Println("  rm, remove <index>      Remove a task by index")
+	fmt.Println("  update <index> <name>   Update task name")
+	fmt.Println("  list [status]           List tasks (optionally filtered by status)")
+	fmt.Println("    - list done           Show completed tasks")
+	fmt.Println("    - list todo           Show incomplete tasks")
+	fmt.Println("    - list in-progress    Show in-progress tasks")
+	fmt.Println("  mark-done <index>       Mark a task as done")
+	fmt.Println("  mark-in-progress <index> Mark a task as in-progress")
+	fmt.Println("  -h, --help              Display this help message")
+	fmt.Println()
+	fmt.Println("Examples:")
+	fmt.Println("  task-cli add \"Buy groceries\"")
+	fmt.Println("  task-cli list")
+	fmt.Println("  task-cli mark-done 1")
+	fmt.Println("  task-cli remove 2")
+}
+
 func checkFileExistence() error {
+	// Create directory if it doesn't exist
+	dir := filepath.Dir(dataDirectory)
+	err := os.MkdirAll(dir, 0755)
+	if err != nil {
+		return err
+	}
+
+	// Create file if it doesn't exist
 	file, err := os.OpenFile(dataDirectory, os.O_CREATE, 0644)
 	if err != nil {
-		if os.IsExist(err) {
-			return nil
-		}
 		return err
 	}
 	defer file.Close()
@@ -127,11 +174,3 @@ func loadDataFromFile() []byte {
 	return data
 }
 
-func parseUserInput(input []string) (string, []string) {
-	// case where if we call the executable with no command, error
-	if len(input) == 1 {
-		return "", nil
-
-	}
-	return input[1], input[2:]
-}

@@ -4,8 +4,6 @@ import (
 	"time"
 )
 
-const minuteTimeLayout = "2006-01-02T15:04"
-
 type TaskStatus int
 
 const (
@@ -42,8 +40,15 @@ func (t *Task) GetName() string {
 	return t.Name
 }
 
-func (t *Task) GetStatus() TaskStatus {
-	return t.Status
+func (t *Task) StatusStr() string {
+	switch t.Status {
+	case Done:
+		return "DONE"
+	case InProgress:
+		return "IN-PROGRESS"
+	default:
+		return "NOT-STARTED"
+	}
 }
 
 func (t *Task) GetCreationTime() time.Time {
@@ -65,5 +70,3 @@ func (t *Task) SetStatus(s TaskStatus) {
 func (task *Task) SetModified(t time.Time) {
 	task.ModifiedAt = t
 }
-
-

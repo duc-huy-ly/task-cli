@@ -29,7 +29,6 @@ func (u *App) AddTask(_name string) {
 
 func (u *App) LoadData(data []byte) {
 	if len(data) == 0 {
-		fmt.Println("nohting to do")
 		return
 	}
 	// decode if the file is not empty
@@ -85,13 +84,9 @@ func (u *App) ChangeStatus(id int, s TaskStatus) {
 	toUpdate.SetModified(time.Now().Truncate(time.Minute))
 }
 
-func displaySimple(task Task) {
-	fmt.Printf("%v : %v\n", task.Id, task.Name)
-}
-
-func displayFull(t Task){
-	fmt.Printf("Name: %v\nId: %v\n Created: %v\nModified:%v", t.Name, t.Id, t.CreatedAt, t.ModifiedAt)
-	fmt.Printf("------------------------------------")
+func displaySimple(t Task) {
+	fmt.Printf("%v: %v [%v]\nCreated: %v\nModified:%v\n", t.Id, t.Name, t.StatusStr(), t.CreatedAt, t.ModifiedAt)
+	fmt.Printf("========================================================\n")
 }
 
 func (u *App) ListAll() {
@@ -102,7 +97,7 @@ func (u *App) ListAll() {
 
 func (u *App) ListDone() {
 	for _, task := range u.Tasks {
-		if task.GetStatus() == Done {
+		if task.Status == Done {
 			displaySimple(task)
 		}
 	}
@@ -110,7 +105,7 @@ func (u *App) ListDone() {
 
 func (u *App) ListToDo() {
 	for _, task := range u.Tasks {
-		if task.GetStatus() == Empty {
+		if task.Status == Empty {
 			displaySimple(task)
 		}
 	}
@@ -118,7 +113,7 @@ func (u *App) ListToDo() {
 
 func (u *App) ListInProgress() {
 	for _, task := range u.Tasks {
-		if task.GetStatus() == InProgress {
+		if task.Status == InProgress {
 			displaySimple(task)
 		}
 	}
