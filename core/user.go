@@ -82,14 +82,18 @@ func (u *App) ChangeStatus(id int, s TaskStatus) {
 		return
 	}
 	toUpdate.SetStatus(s)
+	toUpdate.SetModified(time.Now().Truncate(time.Minute))
 }
+
 func displaySimple(task Task) {
 	fmt.Printf("%v : %v\n", task.Id, task.Name)
 }
 
 func displayFull(t Task){
 	fmt.Printf("Name: %v\nId: %v\n Created: %v\nModified:%v", t.Name, t.Id, t.CreatedAt, t.ModifiedAt)
+	fmt.Printf("------------------------------------")
 }
+
 func (u *App) ListAll() {
 	for _, task := range u.Tasks {
 		displaySimple(task)
